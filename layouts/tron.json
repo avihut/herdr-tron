@@ -1,0 +1,128 @@
+{
+  "id": "root",
+  "type": "column",
+  "titlebar": "none",
+  "traffic_lights": [
+    18,
+    20
+  ],
+  "preview": "layouts/tron.svg",
+  "theme": {
+    "light": "tron-light",
+    "dark": "tron-dark"
+  },
+  "ui_font": "Geist",
+  "terminal_padding": [
+    9,
+    10
+  ],
+  "background": "canvas",
+  "terminal_opacity": 1,
+  "resizable": false,
+  "terminal_menu": "tron",
+  "children": [
+    {
+      "id": "tron-top",
+      "type": "block",
+      "content": {
+        "mod": "tron",
+        "props": {
+          "role": "top"
+        }
+      },
+      "size": {
+        "px": 54
+      },
+      "window_drag": true
+    },
+    {
+      "id": "tron-body",
+      "type": "row",
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "block",
+          "content": {
+            "mod": "tron",
+            "props": {
+              "role": "side"
+            }
+          },
+          "size": {
+            "px": 248
+          },
+          "min": 190,
+          "max": 400
+        },
+        {
+          "id": "tron-work",
+          "type": "column",
+          "min": 300,
+          "padding": 10,
+          "gap": 8,
+          "resizable": false,
+          "children": [
+            {
+              "id": "tron-tabs",
+              "type": "block",
+              "content": {
+                "mod": "tron",
+                "props": {
+                  "role": "tabs"
+                }
+              },
+              "size": {
+                "px": 38
+              }
+            },
+            {
+              "id": "tron-terminal",
+              "type": "block",
+              "content": {
+                "tab": "active",
+                "pane": {
+                  "gap": 8,
+                  "radius": 5,
+                  "background": "background",
+                  "border": {
+                    "width": 1,
+                    "color": "border"
+                  },
+                  "focus": {
+                    "width": 1,
+                    "color": "accent"
+                  },
+                  "lone": true,
+                  "header": {
+                    "height": 32,
+                    "position": "top",
+                    "reveal": "always",
+                    "content": {
+                      "mod": "tron",
+                      "props": {
+                        "role": "pane"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tron-footer",
+      "type": "block",
+      "content": {
+        "mod": "tron",
+        "props": {
+          "role": "footer"
+        }
+      },
+      "size": {
+        "px": 36
+      }
+    }
+  ]
+}

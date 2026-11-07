@@ -1,0 +1,21 @@
+import {cpSync,mkdtempSync,readFileSync,rmSync,writeFileSync,mkdirSync} from 'node:fs';import {tmpdir} from 'node:os';import {dirname,join,resolve} from 'node:path';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';
+import {newCycle,newDisc} from '../mods/tron/games.js';
+const repo=resolve(dirname(fileURLToPath(import.meta.url)),'..'),at=process.argv.indexOf('--source'),root=at>=0?resolve(process.argv[at+1]):repo;
+const temp=mkdtempSync(join(tmpdir(),'herdr-tron-check-'));let count=0;
+const program={name:'Example Program',key:'example',icon:null,shell:false,agent:true};
+const agent=(status,i)=>({address:`t${i}`,pane:`p${i}`,title:`Example ${status} Program with a long descriptive name`,status,program,space:'s1',space_name:'Sector Alpha',tab:'tab1',tab_name:'Operation',tab_index:1,focused:i===0});
+const populated={spaces:[{id:'s1',name:'Sector Alpha with a deliberately long name',machine:null,active:true,tabs:[{id:'tab1',name:'Operation with a deliberately long name',index:1,active:true,panes:1}]}],agents:['working','blocked','done','idle'].map(agent),panes:[{pane:'p0',terminal:'t0',title:'Example Program',focused:true,program,status:'working'}],machines:[{name:null,layout:'ready'},{name:'Remote example',layout:'unavailable'}]};
+const roles=['top','side','tabs','pane','footer','picker','menu','room','cycle','disc'];
+try{
+ cpSync(join(root,'mods/tron'),temp,{recursive:true});cpSync(join(temp,'main.js'),join(temp,'app.js'));
+ // Real Herdr host APIs are checked once with production imports; fixtures exercise every role.
+ let r=spawnSync('herdr-app',['check',temp],{encoding:'utf8',timeout:15000,killSignal:'SIGKILL'});if(r.error||r.status!==0)throw Error(`production: ${r.error?.message??r.stderr??r.stdout}`);count++;
+ for(const dark of [true,false])for(const populatedCase of [false,true]){
+ const data=populatedCase?populated:{spaces:[],agents:[],panes:[],machines:[]};
+ writeFileSync(join(temp,'host.js'),`export {run,openOverlay,closeOverlay,exec} from 'herdr';const data=${JSON.stringify(data)};const state={layout:'tron'};export const props=()=>({});export const settings=()=>({dark:${dark}});export const theme=()=>({});export const focused=()=>({pane:'p0'});export const hostWindow=()=>({platform:'macos',buttons:false});export const spaces=()=>data.spaces,agents=()=>data.agents,panes=()=>data.panes,machines=()=>data.machines;export const layouts=()=>['main','my-herdr','win98','win98-dark','tron'];export const shared=k=>state[k];export const setShared=(k,v)=>{state[k]=v};export const setAgentOrder=()=>{};`);
+ const cases=[...roles.map(role=>({role})),...[1,2].flatMap(level=>[{role:'cycle',fixtureState:{cycle:newCycle(level)}},{role:'disc',fixtureState:{disc:newDisc(level)}}]),...['lounge','armory','portal','archive','reset'].map(room=>({role:'room',room})),...['won','lost'].flatMap(phase=>[{role:'cycle',fixtureState:{cycle:{level:0,pos:[8,5],trail:['0,3'],gate:3,moves:18,phase,message:phase}}},{role:'disc',fixtureState:{disc:{level:0,mirrors:['/','/'],path:[[0,3],[1,3]],attempts:6,rotations:2,phase,message:phase}}}])];
+ for(const test of cases){writeFileSync(join(temp,'main.js'),`import Tron from './app.js';export default class Check extends Tron {init(p,cx){super.init({...p,fixture:true,pane:'p0',target:{type:'pane',id:'p0',terminal:'t0'},...${JSON.stringify(test)}},cx)}}`);
+ r=spawnSync('herdr-app',['check',temp],{encoding:'utf8',timeout:15000,killSignal:'SIGKILL'});if(r.error||r.status!==0)throw Error(`${dark?'dark':'light'}/${populatedCase?'populated':'empty'}/${test.role}/${test.room??''}: ${r.error?.message??r.stderr??r.stdout}`);count++;}
+ }
+ console.log(`Passed ${count} isolated native renders: production imports; every role, both appearances, empty/populated, rooms, every game stage, wins/losses. Layout/paint and live input need UI QA.`);
+}catch(e){console.error(e.message);process.exitCode=1;}finally{rmSync(temp,{recursive:true,force:true});}

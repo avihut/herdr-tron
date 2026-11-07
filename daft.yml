@@ -1,0 +1,6 @@
+layout: contained
+hooks:
+  worktree-post-create:
+    jobs:
+      - name: trust-local-tasks
+        run: mise trust
