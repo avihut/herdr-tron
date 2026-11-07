@@ -6,13 +6,13 @@ A native Herdr layout framed by luminous Legacy-inspired circuitry: a readable w
 
 ## What you see
 
-A 68px title bar reserves 72px for macOS window buttons and carries TRON's native layout picker, Command, Destinations, sidebar toggle and Settings. A 248px resizable sidebar lists sectors and Programs. Its lists scroll independently; full names remain available in tooltips. A 38px route strip precedes the main terminal area. Pane headers are 36px and include split, zoom and explicit context controls. A 46px footer reports actual status counts, local link/battery samples and motion preference.
+A 50px title bar reserves 72px for macOS window buttons and carries TRON's native picker, Command, Destinations, sidebar toggle and Settings. A 248px resizable sidebar has a projected identity-disc dock bound to the focused Program, native selectable parent/child SECTORS rows and a scrollable Program list. Parent selection and disclosure are separate actions; no footer hierarchy selector is used. The dock shrinks on short sidebars and hides below 440px available height. A 52px route strip includes a 14px light bus. Pane headers are 68px measured console housings with clipped glass edges, luminous rails, status/address and split/zoom/context controls. Native gaps are 16px; focused and unfocused borders are both 2px, with focus changing color only. A 36px footer includes real counts, local samples, energy preference.
 
-The dark palette uses #080f16, #101c27, #7de7fa and #e7f6fc. The light palette uses #e7f0f4, #f5f9fb, #006b80 and #102b3a. Both retain #0b121b terminal backgrounds and identical dark ANSI colors. UI typography uses Herdr's available Geist font. Branching cyan circuits connect the chrome: layered native strokes beneath the title bar, through sidebar separators and along pane headers, with square junctions and a vertical sidebar conduit. Selected controls and pane frames carry brighter circuit edges. A perspective Grid grounds the disc archive. Circuit paths remain clear of terminal text and use no animation timer.
+The dark palette uses near-black #04090d, glass #0a151c, cyan #65ddf5 and white-cored #e1fcff illumination. The light palette uses pale #dce8eb/#f3f7f7, dark ink #122c38 and teal #006a80. Both keep #0b121b terminal backgrounds and identical ANSI colors. Geist/Geist Mono are available native fonts; no official logotype is copied. Geometry, palette and motion limits are in design.js and shared with illustrated previews.
 
 ## How it behaves
 
-Program discs and labels show Herdr working, blocked, done and idle states. Only working discs have a native opacity loop, disabled by reduced motion. Clicking a Program focuses its actual address. Right-click actions retain the row/tab/pane clicked. Creation uses Herdr commands and the built-in new-menu. Herdr retains normal confirmation behavior for closing structural objects.
+Program labels show Herdr working, blocked, done and idle states. Native opacity loops provide a 4.8-second breathing glow. One bounded light highlight moves there and back on each pane rail and the tab bus over 5–14 seconds; this is ambient decoration, never a claimed message-delivery event. Reduced motion removes all loops, keeping static light seams and status. Clicking a Program focuses its actual address. Right-click actions retain the row/tab/pane clicked. Creation uses Herdr commands and the built-in new-menu. Herdr retains normal confirmation behavior for closing structural objects.
 
 The pointer picker is content-sized, follows replacement/title/deduplication rules, marks the actual selected layout, and switches through layout.switch. It does not wrap the layout root.
 
@@ -24,16 +24,19 @@ Four dialog destinations provide an attention queue/preferences, local game loun
 - `mods/tron/main.js`: native View roles top/side/tabs/pane/footer/picker/menu/room/cycle/disc.
 - `host.js`: centralized imports from Herdr. No fixture host is installed.
 - `games.js`: pure cycle movement, mirror tracing and score reducers.
-- `circuitry.js`: normalized original trace buses and perspective Grid paths shared with public previews.
+- `design.js`: measured console geometry, appearance palettes, disc cradle and bounded native motion parameters. `circuitry.js`: square perspective Grid for the archive.
 - `geometry.js`: original XYZ disc mesh, transforms, Lambert lighting and projection.
+- `workspace-tree.js` / `workspace-tree-model.js`: native parent/child workspace navigation and machine-scoped shared hierarchy, preserved from the coordinated integration.
 - `system.js`: scutil/pmset parsers, layout listing rules and status words.
 - `themes/tron-dark.json`, `tron-light.json`: terminal palette plus panel semantic colors.
 - `scripts/install.js`: complete staged installer with import/native validation, collision refusal, backups, unowned-file preservation and rollback recovery retention.
 - `scripts/check.js`: production imports plus isolated native state fixtures. `scripts/preview.js` writes original SVG illustrations.
 
-Only the footer executes `/usr/sbin/scutil --nwi` and `/usr/bin/pmset -g batt`, at 30-second cadence with an overlap guard, in cx.spawn. There are no external network calls, sound files, DOM APIs, WebGL or shared pane-rename dependency. All progress/preferences use `tron.v1.*`.
+Only the footer executes `/usr/sbin/scutil --nwi` and `/usr/bin/pmset -g batt`, at 30-second cadence with an overlap guard, in cx.spawn. The workspace tree also reads local hierarchy/group files and uses read-only `sh -c cat` on configured remote machines. There are no web requests, sound files, DOM APIs, WebGL or shared pane-rename dependency. All progress/preferences use `tron.v1.*`.
 
 ## Watch out
+
+Continuous custom routes between arbitrary pane gutters and actual relay-triggered animation require a host extension: no pane bounds, gutter layer or delivery-event feed is currently documented. Do not reconstruct the terminal tree or use an overlay to simulate that capability. The current implementation is confined to headers and the tab bus.
 
 The native checker does not lay out, paint, or click the interface. A fixture pass is not live QA. A sandbox may hang the standalone renderer; a timeout must fail clearly and any permission escalation must use the normal review mechanism. Never start or restart herdr-core as a workaround.
 
@@ -47,5 +50,6 @@ Keep game grids bounded (9×7 and 7×7). Narrow dialogs scroll vertically; their
 - Parser fixtures cover actual/absent/unknown hardware, failures and local network states.
 - Installer tests prove import completeness, preserved user files, collision refusal, rollback and retained recovery after rollback failure.
 - All native roles pass in dark/light and empty/populated fixtures, including the model, archive, reset and terminal game states.
+- Live QA inspects the breathing/travelling motion, reduced-motion fallback, real narrow/wide/ultrawide geometry, uneven splits and supported UI scales, plus idle/active performance.
 - Live QA verifies the picker, rooms, game moves and completed wins, disc transforms, source-state indicators, readable terminals in both appearances and final restoration with no errors.
 - Documentation explicitly identifies any remaining unverified behavior, and public artifacts contain no private session data.

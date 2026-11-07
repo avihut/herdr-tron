@@ -19,3 +19,18 @@ The Grid, Programs, Users, ENCOM, identity discs, light cycles, Bit and the phra
 The primary direction is Legacy's black surfaces, pale luminous edges and measured geometry. Light chrome and violet classic-grid circuitry are accessibility/cosmetic adaptations, not frame-faithful reproductions. Geist is Herdr's available readable UI typeface; no trademark logotype or decorative alphabet replaces essential text.
 
 Native geometry keeps the art portable. The disc is an original annular solid with 24 segments and eight surfaces per segment. Rotation changes XYZ coordinates before lighting/projection; 192 faces bound its render cost. A native opacity loop indicates actual working status. Everything stops moving under reduced motion except explicit user actions.
+
+## Deeper production study and redesign
+
+The first neon strips were rejected by the user as stretched, decorative and insufficiently integrated into the terminal layout. A subsequent measured-rail revision corrected proportions but did not deliver enough of TRON's environment. The architectural/energy redesign supersedes both; [DESIGN.md](DESIGN.md) records implementation and remaining host limits.
+
+Additional primary material read and visually inspected on 2026-11-07:
+
+- [Darren Gilford, Eric Barba and Ed Ulbrich interview](https://motionographer.com/2011/01/24/full-coverage-talking-tron-with-digital-domain/): geometric simplicity and light-line continuity across the production's designs. Design consequence: a coherent structural treatment, not repeated decorative badges.
+- [Disney production account, including Joseph Kosinski's statements](https://www.cgw.com/Press-Center/Web-Exclusives/2011/Tron-Legacy.aspx): physical material references—glass, concrete and steel. Consequence: near-black recesses and lit edges around quiet glass surfaces.
+- [GMUNK Board Room](https://gmunk.com/TRON-Board-Room): visually inspected a production projection and light-table image. Observed modular columns, nested outlined panels, restrained technical labels and sparse accent colors. Consequence: strong readable module hierarchy.
+- [GMUNK Throne Room](https://gmunk.com/TRON-Throne-Room): visually inspected the minimal Throneship glass design sheet, including angular outlines, long quiet spans and integrated circular forms. Consequence: measured clipped console edges with fixed-proportion corners.
+- [GMUNK Disc Game](https://gmunk.com/TRON-Disc-Game): visually inspected the arena frame with monumental luminous discs and black/glass surfaces. Consequence: bring the useful identity-disc form into everyday navigation rather than hide it only in a destination.
+- [GMUNK interview on Pushing Pixels](https://www.pushing-pixels.org/2011/06/01/visual-effects-of-tron-legacy-and-beyond-conversation-with-gmunk.html): production workflow and simplification of visual detail for clear communication. Consequence: keep terminal text and actual statuses clear beneath the atmosphere.
+
+The reference images remain private research material and are not bundled. All shipped paths, meshes and previews are original. Breathing ambient energy, Herdr's pane/tab mapping, the pale appearance and the runtime animation timing are adaptations requested for this interface, not reproductions of an on-screen operating system. No claimed canonical typography or message protocol is invented.

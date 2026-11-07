@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {tree,pathFor,matches} from '../mods/tron/workspace-tree-model.js';
+const ss=[{id:'a',name:'Repository',machine:null,folder:'/code/daft',active:false,tabs:[]},{id:'b',name:'hooks',machine:null,folder:'/code/daft/branch',active:true,tabs:[{id:'t',name:'main',active:true}]},{id:'v/a',name:'Remote',machine:'v',folder:'/code/daft',tabs:[]}];
+const cfg={'':{list:[{id:'d',name:'daft',match:'/code/daft'}],of:{a:'d',b:'d'}},v:{list:[{id:'d',name:'remote group'}],of:{a:'d'}}};
+const result=tree(ss,cfg); assert.equal(result[0].children[0].children.length,2);assert.equal(result[1].children[0].children[0].id,'v/a');assert.deepEqual(pathFor(result,'b'),['This computer','daft','hooks']);assert.equal(result[0].children[0].children[1].children[0].active,true);
+assert.equal(tree(ss,{'':{...cfg[''],of:{a:''}}})[0].children[1].id,'a');assert(matches('~/code/*','/Users/me/code/daft/main'));assert(!matches('/code/daft','/code/daft-other'));assert.equal(tree([],cfg).length,0);
+console.log('Grouping tests passed: local/remote ID isolation, explicit membership, exclusions, path rules, active tabs, empty state.');
+const parented=tree(ss,{},[],{'':{parents:{b:'a'}}});
+assert.deepEqual(pathFor(parented,'b'),['This computer','Repository','hooks']);assert.equal(parented[0].children.length,1);assert.equal(parented[0].children[0].id,'a');
+assert.equal(tree(ss,{},[],{'':{parents:{a:'b',b:'a'}}})[0].children.length,2);
+assert.equal(tree(ss,{},[],{'':{parents:{b:'missing'}}})[0].children.length,2);
+assert.equal(tree(ss,{},[],{'':{parents:{a:'a'}}})[0].children.length,2);
+assert.equal(tree(ss,{},[],{'':{parents:{b:'v/a'}}})[0].children.length,2);
+console.log('Parent-space tests passed: selectable parents, own tabs, nesting, cycles, stale parents, self-parent and cross-machine rejection.');

@@ -2,9 +2,9 @@
 
 ![TRON dark workspace illustration](previews/dark.svg)
 
-**A luminous Grid around your real work.** Native Herdr chrome inspired by *TRON: Legacy*: dark glass, deliberate geometry, identity discs and branching neon circuitry. A pale technical appearance keeps the same hierarchy around readable dark terminals.
+**A luminous Grid around your real work.** Native Herdr chrome inspired by *TRON: Legacy*: dark glass console housings, identity discs and breathing light seams. A pale technical appearance keeps the same hierarchy around readable dark terminals.
 
-The images here are **original illustrations**, not screenshots of a live session. They use example labels and contain no terminal conversations. Installed and exercised in Herdr on macOS, including both games and appearances. See [validation](docs/VALIDATION.md) for exact coverage and remaining limits.
+The images here are **original illustrations**, not screenshots of a live session. They use example labels and contain no terminal conversations. The original release was exercised in Herdr on macOS. **The architectural/energy redesign is installed and was inspected in dark/light at 3840×2130, with native motion controls, inline parent/child navigation and a 110% UI-scale check.** Narrower windows, arbitrary gutter routing and performance acceptance remain open. See [validation](docs/VALIDATION.md) for revision-specific coverage and [design notes](docs/DESIGN.md) for the researched direction and host limits.
 
 | Everyday work | Between operations |
 | --- | --- |
@@ -44,7 +44,13 @@ For a shared live window, coordinate an exclusive QA slot and use the host's QA 
 
 ## The working surface
 
-The terminal occupies the main region. A 248px resizable sidebar carries sectors and Programs; a 68px title bar contains navigation and a native layout picker. Routes sit immediately above the framed panes. Collapse the sidebar with **≡**. Layered native light paths run beneath the title bar and above the footer, branch along the sidebar and join the pane headers. Selected controls carry bright circuit edges; menus and rooms use the same luminous traces. A perspective Grid sits behind the 3D disc. These shapes are original decorative artwork, never fabricated telemetry.
+The terminal occupies the main region. A 248px resizable sidebar carries a prominent identity-disc dock, sectors and Programs; a 50px title bar contains navigation and the native layout picker. The focused Program's real address sits inside the projected disc, and the dock opens its archive. The dock contracts on short windows so the Program list remains usable.
+
+A 52px route strip carries the shared visual power bus. Each pane has a 68px measured console housing, clipped glass edges and white-cored light seams. Sixteen-pixel gaps give the consoles breathing room. Borders keep the same width when focus changes, avoiding terminal reflow. Geometry uses logical pixels: resizing changes straight spans, never the proportions of corners.
+
+**Energy flows and breathes.** Native loops send a highlight back and forth along each header rail and the tab bus while the surrounding light slowly swells. This is ambient atmosphere, not message-delivery telemetry. `Energy still` stops the motion. The [animated SVG illustration](previews/energy.svg) demonstrates the intended pattern using example content; it is not a native recording.
+
+The current host lets mods draw in pane headers but offers no measured gutter-decoration surface. This version therefore does **not** draw continuous custom paths between arbitrary panes or synchronize them to actual relay events. A host extension is required for that part of the requested design. See the [exact capability boundary](docs/DESIGN.md#exact-host-limitation).
 
 | The Grid | Herdr | Controls |
 | --- | --- | --- |
@@ -101,7 +107,7 @@ The boards are deterministic. The solver tests enumerate every mirror arrangemen
 
 Light mode uses pale technical panels, dark ink and deep teal highlights. **Both appearances keep dark terminal backgrounds and the same readable ANSI palette** because already-running terminal programs may retain dark formatting. Menus and games use the chrome palette. System appearance follows Herdr's settings.
 
-The status bar's **Motion on/off** control toggles the native Program-disc opacity animation; Grid command exposes the same preference. There are no continuous JavaScript redraw timers. All 3D transforms are user controlled. This version plays **no audio** and bundles no soundtrack. Palette/circuit preferences and scores are stored under `tron.v1.*` in Herdr shared state.
+The status bar's **Energy flowing / Energy still** control toggles all ambient native motion; Grid command exposes the same reduced-motion preference. Light seams breathe over 4.8 seconds, and bounded highlights travel there and back over 5–14 seconds according to rail length. There are no continuous JavaScript redraw timers. All 3D transforms are user controlled. This version plays **no audio** and bundles no soundtrack. Palette/circuit preferences and scores are stored under `tron.v1.*` in Herdr shared state.
 
 <details>
 <summary>Archive access: discoveries and spoilers</summary>
@@ -118,7 +124,7 @@ These are original Herdr adaptations. They do not reproduce movie software or of
 
 ## Honest local indicators
 
-The footer samples `/usr/sbin/scutil --nwi` and `/usr/bin/pmset -g batt` on macOS about every 30 seconds, with an overlap guard. These are the **only external programs executed by this mod**, and both are read-only. It makes no external network requests and reads no session files.
+The footer samples `/usr/sbin/scutil --nwi` and `/usr/bin/pmset -g batt` on macOS about every 30 seconds, with an overlap guard. Both are read-only. The workspace-tree integration also reads the shared hierarchy/grouping files locally and uses a read-only `sh -c cat` command on configured remote machines. No web requests or external telemetry service are used.
 
 **LINK UP** means the sample reported local interfaces; it does **not** prove Internet access. Hover for interfaces and sample time. Failed/unrecognized probes show unknown. Battery percentage is parsed from the system output, charging and AC states are distinguished, and known absent hardware hides the icon. A later failure on known battery hardware shows unknown rather than a stale percentage. Other platforms show unknown local samples; Herdr's machine readiness remains available independently.
 
@@ -130,11 +136,12 @@ Physical charging/discharging/offline branches need testing on suitable hardware
 | --- | --- |
 | `mise run test` | Game paths, edge cases, parser fixtures, mesh math and installer rollback |
 | `mise run check` | Isolated production import check plus every role/appearance/data/game-state fixture |
+| `mise run build` | Regenerate source layouts/themes and preview SVGs |
 | `mise run preview` | Rebuild original illustration SVGs from deterministic geometry |
 | `mise run install` | Validate then install new TRON targets |
 | `mise run update` | Validate then back up and replace TRON targets |
 
-There are no runtime package dependencies, so entering a worktree does not require a package install. `daft.yml` is tracked and selects the contained layout. The source has no generated app types or fixture modules in the installed mod. Native checks are bounded by a 15-second timeout per process; a failed check stops installation.
+There are no runtime package dependencies, so entering a worktree does not require a package install. `daft.yml` is tracked and selects the contained layout. Generated app types/configs are excluded from the source package; no fixture host is installed. Native checks are bounded by a 15-second timeout per process; a failed check stops installation.
 
 The [validation record](docs/VALIDATION.md) separates pure tests, native renders and live UI evidence. The [recipe](RECIPE.md) describes how to recreate the interface. [Research and credits](docs/RESEARCH.md) distinguish production references from adaptations. [License and notices](NOTICE.md) explain asset ownership.
 
@@ -143,3 +150,9 @@ The [validation record](docs/VALIDATION.md) separates pure tests, native renders
 Explore [Evangelion](https://github.com/avihut/herdr-evangelion), [Fallout](https://github.com/avihut/herdr-fallout) and [Windows XP](https://github.com/avihut/herdr-xp). Each is an independent layout; TRON neither installs nor modifies them.
 
 Unofficial fan-inspired interface. Not affiliated with or endorsed by Disney.
+
+## Workspaces in the main sidebar
+
+SECTORS renders selectable parent and child workspaces directly in TRON's primary sidebar. A parent's name opens its own workspace; its disclosure arrow independently expands or collapses children. Tabs remain in that workspace's ordinary route strip. There is no separate footer selector. Remote machine IDs stay scoped, and optional folder grouping remains compatible.
+
+The shared model reads per-machine `~/.config/herdr-space-tree.json` through `shared("space-hierarchy")`, with `~/.config/herdr-space-folders.json` as optional grouping data. The integration samples those files every 15 seconds with the callback's current context. These are read-only navigation inputs; choosing a parent does not rename, move or close its children.

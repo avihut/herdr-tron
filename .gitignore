@@ -2,3 +2,7 @@ node_modules/
 .qa/
 .DS_Store
 daft.local.yml
+
+# Herdr generated editor support, never package source
+mods/tron/*.d.ts
+mods/tron/jsconfig.json

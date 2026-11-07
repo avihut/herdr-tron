@@ -31,7 +31,7 @@
         }
       },
       "size": {
-        "px": 68
+        "px": 50
       },
       "window_drag": true
     },
@@ -72,7 +72,7 @@
                 }
               },
               "size": {
-                "px": 38
+                "px": 52
               }
             },
             {
@@ -81,12 +81,12 @@
               "content": {
                 "tab": "active",
                 "pane": {
-                  "gap": 8,
-                  "radius": 2,
+                  "gap": 16,
+                  "radius": 0,
                   "background": "background",
                   "border": {
-                    "width": 1,
-                    "color": "border"
+                    "width": 2,
+                    "color": "input"
                   },
                   "focus": {
                     "width": 2,
@@ -94,7 +94,7 @@
                   },
                   "lone": true,
                   "header": {
-                    "height": 36,
+                    "height": 68,
                     "position": "top",
                     "reveal": "always",
                     "content": {
@@ -121,7 +121,7 @@
         }
       },
       "size": {
-        "px": 46
+        "px": 36
       }
     }
   ]

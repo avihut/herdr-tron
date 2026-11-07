@@ -1,33 +1,31 @@
-// Original illustrative SVGs, deliberately never reading a live session.
+// Original source-geometry illustrations. No session data or film artwork.
 import {writeFileSync,mkdirSync} from 'node:fs';
 import {projectDisc,faceColor} from '../mods/tron/geometry.js';
-import {BUS,NODES,GRID} from '../mods/tron/circuitry.js';
+import {gridPalette,consoleGeometry,discCradle,energyMotion} from '../mods/tron/design.js';
 mkdirSync('previews',{recursive:true});
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;');
+const rect=(x,y,w,h,fill,stroke='none')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${stroke}"/>`;
+const text=(x,y,s,size,color)=>`<text x="${x}" y="${y}" fill="${color}" font-family="Arial,sans-serif" font-size="${size}">${esc(s)}</text>`;
+const path=(lines,color,width=1,opacity=1)=>`<path d="${lines.map(ps=>ps.map(([x,y],i)=>`${i?'L':'M'}${x},${y}`).join('')).join('')}" fill="none" stroke="${color}" stroke-width="${width}" opacity="${opacity}"/>`;
+const polygon=(points,fill)=>`<polygon points="${points.map(p=>p.join(',')).join(' ')}" fill="${fill}"/>`;
+const mesh=(size,color,pitch=.35)=>projectDisc(.14,pitch,size).map(f=>polygon(f.points,faceColor(f,color))).join('');
+function packet(start,end,y,color,animated=false){const m=energyMotion(start,end);if(!m)return '';return `<rect x="${m.from}" y="${y-2}" width="${m.width}" height="4" fill="${color}">${animated?`<animate attributeName="x" values="${m.from};${m.to};${m.from}" dur="${m.period/1000}s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines=".42 0 .58 1;.42 0 .58 1"/>`:''}</rect>`;}
+function header(w,c,color,animated=false){const g=consoleGeometry(w,68);return polygon(g.plate,c.glass)+path(g.outline,c.edge)+path(g.contacts,color,1,.5)+`<g>${animated?'<animate attributeName="opacity" values=".28;.8;.28" dur="4.8s" repeatCount="indefinite"/>':''}${path(g.seams,color,5,.22)}</g>`+path(g.seams,color,1.5,.75)+path(g.cores,c.core,2)+packet(Math.min(96,Math.floor(w*.3))+24,w-22,62,color,animated);}
+function pane(x,y,w,h,i,c,animated=false){const color=i===2?c.orange:c.accent;let out=rect(x,y,w,h,'#0b121b',i===1?c.accent:c.edge)+`<g transform="translate(${x},${y})">`+rect(0,0,w,68,c.bg)+header(w,c,color,animated)+text(15,24,`t${i}`,13,color)+text(w-65,24,'↗   ···',12,c.muted)+text(15,52,i===1?'FOCUSED':i===2?'NEEDS INPUT':'WORKING',8,color);if(w>=360)out+=text(65,24,`Example ${i===2?'review':'build'} session`,11,c.text);out+='</g>';
+ const lines=['› Example terminal session','  Native text and keyboard focus stay intact.','','  src / application.ts','  + Implement the next change','  + Run the relevant checks','','  $ pnpm test','  Tests passed.',''];
+ for(let j=0;j<Math.min(lines.length,Math.floor((h-100)/20));j++)out+=text(x+16,y+98+j*20,lines[j],12,j===8?'#9cdb9b':j===4||j===5?'#83bfff':'#9ab5c5');return out;}
+function workspace(w,h,light,uneven=false,animated=false){const c=gridPalette(!light),side=w<900?0:248,margin=10,bodyX=side+margin,bodyY=120,bodyW=w-bodyX-margin,bodyH=h-bodyY-46,cols=w>2300?4:w>1100?2:1,gap=16,pw=(bodyW-gap*(cols-1))/cols,split=uneven?.43:.5;
+ let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">`+rect(0,0,w,h,c.bg)+text(92,31,'TRON ▾',16,c.accent)+text(190,31,'G R I D   C O M M A N D',10,c.muted)+text(w-225,31,'Destinations    ≡    Settings',12,c.text)+path([[[0,50],[w,50]]],c.line)+text(bodyX+12,83,'01 / Example workspace',12,c.accent)+text(w-77,83,'+ Route',12,c.text)+path([[[bodyX,105],[w-10,105]]],c.accent,5,.13)+path([[[bodyX,105],[w-10,105]]],c.accent,1,.7)+packet(bodyX,w-10,105,c.accent,animated);
+ if(side){const d=discCradle(184);svg+=rect(0,50,side,h-86,c.panel)+text(14,78,'IDENTITY / t1',10,c.accent)+`<g transform="translate(32,88)">`+path(d.rings,c.accent,1,.45)+path(d.ticks,c.line)+path(d.supports,c.accent,1,.5)+path(d.light,c.accent,5,.3)+path(d.light,c.core,2)+mesh(184,c.accent)+text(83,98,'t1',18,c.core)+'</g>'+text(14,296,'Example build session',12,c.text)+text(14,314,'WORKING',9,c.accent)+path([[[14,330],[234,330]]],c.line)+text(14,358,'SECTORS',10,c.accent)+text(14,390,'▾ Example parent workspace',12,c.text)+text(34,414,'· Example child workspace',12,c.text)+path([[[14,438],[234,438]]],c.line)+text(14,466,'PROGRAMS',10,c.accent);
+ for(let i=0;i<Math.min(6,Math.floor((h-568)/55));i++)svg+=rect(14,480+i*55,220,48,i===0?c.raised:c.panel)+rect(14,480+i*55,i===0?2:1,48,i===0?c.accent:c.line)+text(23,499+i*55,`t${i+1}`,10,i===1?c.orange:c.accent)+text(57,499+i*55,'Example session',12,c.text)+text(57,517+i*55,i===1?'NEEDS INPUT':'WORKING',9,i===1?c.orange:c.muted);
+ svg+=text(14,h-78,'Disc archive ↗',12,c.text)+text(14,h-53,'THE GRID / Program directory',9,c.muted);}
+ for(let col=0;col<cols;col++){const first=(bodyH-gap)*(uneven&&col%2?1-split:split);svg+=pane(bodyX+col*(pw+gap),bodyY,pw,first,col+1,c,animated)+pane(bodyX+col*(pw+gap),bodyY+first+gap,pw,bodyH-first-gap,col+cols+1,c,animated);}
+ svg+=path([[[0,h-36],[w,h-36]]],c.line)+text(14,h-13,side?'Original illustration · example labels · native header geometry / ambient energy':'Original illustration · sidebar manually collapsed · example labels',10,c.muted)+text(w-345,h-13,'LINK UP      Energy flowing',11,c.text)+'</svg>';return svg;}
 for(const light of [false,true]){
-const c=light?{bg:'#e7f0f4',panel:'#f5f9fb',line:'#a3bdca',muted:'#466171',fg:'#102b3a',accent:'#006b80',orange:'#995000'}:{bg:'#080f16',panel:'#101c27',line:'#2b4352',muted:'#9ab5c5',fg:'#e7f6fc',accent:'#7de7fa',orange:'#ffb66d'};
-let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900"><rect width="1440" height="900" rx="20" fill="${c.bg}"/>`;
-const text=(x,y,s,size=16,color=c.fg)=>`<text x="${x}" y="${y}" fill="${color}" font-family="Arial,sans-serif" font-size="${size}">${esc(s)}</text>`;
-const rect=(x,y,w,h,fill=c.panel,r=2)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"/>`;
-const circuitry=(x,y,w,h,grid=false)=>{const lines=grid?GRID:BUS;const d=lines.map(ps=>ps.map(([a,b],i)=>`${i?'L':'M'}${x+a*w/100} ${y+b*h/100}`).join('')).join('');return [[9,.06],[4,.19],[1.3,grid?.4:.75]].map(([sw,o])=>`<path d="${d}" fill="none" stroke="${c.accent}" stroke-width="${sw}" opacity="${o}"/>`).join('')+(grid?'':NODES.map(([a,b])=>`<rect x="${x+a*w/100}" y="${y+b*h/100}" width="4" height="4" fill="${c.accent}"/>`).join(''));};
-const disc=(x,y,col=c.accent)=>`<circle cx="${x}" cy="${y}" r="20" fill="none" stroke="${col}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="11" fill="none" stroke="${col}"/>`;
-svg+=text(42,57,'TRON',28,c.accent)+text(164,55,'THE GRID',13,c.muted)+text(1060,55,'Command    Destinations ↗',15,c.muted);
-svg+=circuitry(0,70,1440,24)+circuitry(32,261,250,24)+circuitry(32,665,250,58,true)+circuitry(0,820,1440,20)+`<path d="M295 104V310L304 330V540L295 560V806" fill="none" stroke="${c.accent}" stroke-width="2"/>`;
-svg+=text(42,130,'01 / SECTORS',12,c.muted)+rect(32,150,250,48)+text(48,181,'Interface research',16,c.accent)+text(48,230,'Tools & experiments',16,c.muted)+text(42,307,'02 / PROGRAMS',12,c.muted);
-svg+=disc(61,359)+text(98,354,'Design program',16)+text(98,377,'t1 · WORKING',11,c.muted)+disc(61,435,c.orange)+text(98,430,'Review program',16)+text(98,453,'t2 · NEEDS INPUT',11,c.orange)+disc(61,511)+text(98,506,'Build program',16)+text(98,529,'t3 · IDLE',11,c.muted);
-svg+=rect(32,743,250,48)+text(48,774,'Identity-disc archive ↗',16,c.accent);
-svg+=rect(322,104,300,46)+text(340,134,'01 / Geometry studies',16,c.accent)+text(649,134,'02 / Tests',16,c.muted)+rect(322,169,1086,640,'#0b121b');
-svg+=rect(322,169,1086,54,c.panel,0)+rect(32,150,3,48,c.accent,0)+rect(322,147,300,3,c.accent,0);
-svg+=`<path d="M322 169H1408V809H322Z" fill="none" stroke="${c.accent}" stroke-width="2"/>`+circuitry(1130,180,250,26);
-svg+=text(344,205,'t1 / Design program',12,c.muted)+`<path d="M324 223H1406" stroke="${c.accent}" stroke-width="2"/>`;
-svg+=text(362,282,'Your terminal. Your work.',28,'#e0edf4')+text(362,321,'Neon circuits frame the work.',17,'#9ab5c5')+text(362,383,'› Example terminal area',16,'#7de7fa')+text(362,417,'  Luminous traces • native motion • real agent status',16,'#9ab5c5');
-svg+=text(42,865,'Original illustrated preview · example labels · no session data',12,c.muted)+text(1110,865,'LINK ?    Motion on',12,c.muted)+`</svg>`;
-writeFileSync(`previews/${light?'light':'dark'}.svg`,svg);
-if(!light)writeFileSync('layouts/tron.svg',svg);
-let arm=`<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600"><rect width="1100" height="600" rx="16" fill="${c.bg}"/>`+text(42,58,'Identity-disc archive',28)+text(42,91,'Interactive perspective projection · native GPUI paths',14,c.muted);
-arm+=circuitry(0,105,1100,24)+circuitry(90,120,380,380,true)+circuitry(574,445,474,30);
-arm+=`<g transform="translate(90,120)">`+projectDisc(.3,.85,380).map(f=>`<polygon points="${f.points.map(p=>p.join(',')).join(' ')}" fill="${faceColor(f,light?'#006b80':'#7de7fa')}"/>`).join('')+'</g>';
-arm+=rect(574,147,474,280)+text(600,181,'BOUND PROGRAM',12,c.muted)+text(600,223,'Choose a Program from your live list',20)+text(600,262,'Actual name · address · status',16,c.muted)+text(600,324,'Focus this Program →',16,c.accent)+text(600,392,'Cosmetic circuit: cyan / orange / white',15,c.muted)+text(160,530,'↶    ↷     Tilt +     Tilt −     Reset view',17,c.accent)+text(42,578,'Original illustration generated from the same 3D mesh as the mod.',12,c.muted)+'</svg>';
-writeFileSync(`previews/disc-${light?'light':'dark'}.svg`,arm);
+ const c=gridPalette(!light),mode=light?'light':'dark';const svg=workspace(1600,1040,light,true);writeFileSync(`previews/${mode}.svg`,svg);if(!light)writeFileSync('layouts/tron.svg',svg);
+ let arm=`<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600">`+rect(0,0,1100,600,c.bg)+text(42,58,'Identity-disc archive',28,c.text)+text(42,91,'Native projected 3D · original illustration',14,c.muted)+`<g transform="translate(90,140)">`+mesh(360,c.accent,.85)+'</g>';
+ arm+=rect(574,147,474,280,c.panel,c.line)+text(600,181,'BOUND PROGRAM',12,c.accent)+text(600,223,'Choose a Program from your live list',20,c.text)+text(600,262,'Actual name · address · status',16,c.muted)+text(600,324,'Focus this Program →',16,c.accent)+text(600,392,'Cosmetic circuit: cyan / orange / white',15,c.muted)+text(160,530,'Rotate     Tilt +     Tilt −     Reset view',17,c.accent)+'</svg>';writeFileSync(`previews/disc-${mode}.svg`,arm);
 }
-console.log('Wrote original dark/light workspace and disc-archive illustrations.');
+for(const [name,w,h]of [['narrow',760,850],['ultrawide',3840,1500]])writeFileSync(`previews/${name}.svg`,workspace(w,h,false,true));
+writeFileSync('previews/energy.svg',workspace(1600,1040,false,true,true));
+console.log('Wrote source-geometry illustrations. Moving highlights shown at an illustrative phase; not live captures.');

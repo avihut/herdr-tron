@@ -24,7 +24,7 @@ export function install({configDir=join(homedir(),'.config/herdr-app'),sourceDir
   // Complete merged folder outside watched mods. Preserve files this package did not own.
   const mod=join(stage,'mods/tron');mkdirSync(mod,{recursive:true});
   if(existing.includes('mods/tron')){cpSync(join(configDir,'mods/tron'),mod,{recursive:true});const previous=join(mod,'.tron-owned.json');if(existsSync(previous)){for(const file of JSON.parse(readFileSync(previous,'utf8'))){if(typeof file!=='string'||file.startsWith('/')||file.split('/').includes('..'))throw Error('Invalid ownership manifest');rmSync(join(mod,file),{force:true});}}}
-  const input=join(sourceDir,'mods/tron'),owned=files(input).filter(f=>f!=='.tron-owned.json');
+  const input=join(sourceDir,'mods/tron'),owned=files(input).filter(f=>!f.startsWith('.')&&!f.endsWith('.d.ts')&&f!=='jsconfig.json');
   cpSync(join(input,'mod.json'),join(mod,'mod.json'));
   for(const f of owned.filter(f=>f!=='mod.json'&&f!=='main.js')){mkdirSync(dirname(join(mod,f)),{recursive:true});cpSync(join(input,f),join(mod,f));}
   cpSync(join(input,'main.js'),join(mod,'main.js'));writeFileSync(join(mod,'.tron-owned.json'),JSON.stringify(owned));

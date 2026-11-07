@@ -14,3 +14,6 @@ run = "pnpm run install:layout"
 [tasks.update]
 depends = ["test", "check"]
 run = "pnpm run install:layout --update"
+
+[tasks.build]
+run = ["node scripts/setup.js", "pnpm run preview"]
