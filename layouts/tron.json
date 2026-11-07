@@ -31,7 +31,7 @@
         }
       },
       "size": {
-        "px": 54
+        "px": 68
       },
       "window_drag": true
     },
@@ -82,19 +82,19 @@
                 "tab": "active",
                 "pane": {
                   "gap": 8,
-                  "radius": 5,
+                  "radius": 2,
                   "background": "background",
                   "border": {
                     "width": 1,
                     "color": "border"
                   },
                   "focus": {
-                    "width": 1,
+                    "width": 2,
                     "color": "accent"
                   },
                   "lone": true,
                   "header": {
-                    "height": 32,
+                    "height": 36,
                     "position": "top",
                     "reveal": "always",
                     "content": {
@@ -121,7 +121,7 @@
         }
       },
       "size": {
-        "px": 36
+        "px": 46
       }
     }
   ]

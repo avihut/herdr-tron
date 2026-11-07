@@ -34,3 +34,9 @@ Stages 02/03 of each game were solved in pure tests and have native board fixtur
 ## Evidence handling
 
 Public previews are original SVG illustrations generated without live data. Private screenshots, logs, settings, shared state and terminal transcripts must never be committed. Research imagery was viewed, not copied into the package.
+
+## Neon circuitry revision — 2026-11-07
+
+The user requested a more recognizable neon-circuit design. Added original branching buses with layered native strokes and junctions, a sidebar conduit, stronger status-disc rings, selected-control edges, pane-header traces, room/menu circuitry, illuminated game trails and a perspective Grid behind the disc model. Traces are static decorative geometry; no additional polling or animation loop was introduced. Pane-header ornaments hide at narrow widths.
+
+The 16 pure tests and all 93 isolated native renders pass with the new local circuitry import. Public dark/light and disc-archive illustrations were regenerated from the shared original path definitions. Live revision-specific inspection is pending the coordinated shared-window slot.

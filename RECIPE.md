@@ -1,14 +1,14 @@
 # TRON / Grid Command
 
-A native Herdr layout framed by restrained Legacy-inspired circuitry: a readable workspace with status discs, a quiet game lounge, an interactive solid disc and a real system directory.
+A native Herdr layout framed by luminous Legacy-inspired circuitry: a readable workspace with status discs, a game lounge, an interactive solid disc and a real system directory.
 
 ![Original workspace illustration](previews/dark.svg)
 
 ## What you see
 
-A 54px title bar reserves 72px for macOS window buttons and carries TRON's native layout picker, Command, Destinations, sidebar toggle and Settings. A 248px resizable sidebar lists sectors and Programs. Its lists scroll independently; full names remain available in tooltips. A 38px route strip precedes the main terminal area. Pane headers are 32px and include split, zoom and explicit context controls. A 36px footer reports actual status counts, local link/battery samples and motion preference.
+A 68px title bar reserves 72px for macOS window buttons and carries TRON's native layout picker, Command, Destinations, sidebar toggle and Settings. A 248px resizable sidebar lists sectors and Programs. Its lists scroll independently; full names remain available in tooltips. A 38px route strip precedes the main terminal area. Pane headers are 36px and include split, zoom and explicit context controls. A 46px footer reports actual status counts, local link/battery samples and motion preference.
 
-The dark palette uses #080f16, #101c27, #7de7fa and #e7f6fc. The light palette uses #e7f0f4, #f5f9fb, #006b80 and #102b3a. Both retain #0b121b terminal backgrounds and identical dark ANSI colors. UI typography uses Herdr's available Geist font. Rounded panels and thin separators organize content; neon frames do not surround every control.
+The dark palette uses #080f16, #101c27, #7de7fa and #e7f6fc. The light palette uses #e7f0f4, #f5f9fb, #006b80 and #102b3a. Both retain #0b121b terminal backgrounds and identical dark ANSI colors. UI typography uses Herdr's available Geist font. Branching cyan circuits connect the chrome: layered native strokes beneath the title bar, through sidebar separators and along pane headers, with square junctions and a vertical sidebar conduit. Selected controls and pane frames carry brighter circuit edges. A perspective Grid grounds the disc archive. Circuit paths remain clear of terminal text and use no animation timer.
 
 ## How it behaves
 
@@ -24,6 +24,7 @@ Four dialog destinations provide an attention queue/preferences, local game loun
 - `mods/tron/main.js`: native View roles top/side/tabs/pane/footer/picker/menu/room/cycle/disc.
 - `host.js`: centralized imports from Herdr. No fixture host is installed.
 - `games.js`: pure cycle movement, mirror tracing and score reducers.
+- `circuitry.js`: normalized original trace buses and perspective Grid paths shared with public previews.
 - `geometry.js`: original XYZ disc mesh, transforms, Lambert lighting and projection.
 - `system.js`: scutil/pmset parsers, layout listing rules and status words.
 - `themes/tron-dark.json`, `tron-light.json`: terminal palette plus panel semantic colors.

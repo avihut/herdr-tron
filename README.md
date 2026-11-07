@@ -2,7 +2,7 @@
 
 ![TRON dark workspace illustration](previews/dark.svg)
 
-**A quiet Grid around your real work.** Native Herdr chrome inspired by *TRON: Legacy*: dark glass, deliberate geometry, identity discs and restrained cyan circuitry. A pale technical appearance keeps the same hierarchy around readable dark terminals.
+**A luminous Grid around your real work.** Native Herdr chrome inspired by *TRON: Legacy*: dark glass, deliberate geometry, identity discs and branching neon circuitry. A pale technical appearance keeps the same hierarchy around readable dark terminals.
 
 The images here are **original illustrations**, not screenshots of a live session. They use example labels and contain no terminal conversations. Installed and exercised in Herdr on macOS, including both games and appearances. See [validation](docs/VALIDATION.md) for exact coverage and remaining limits.
 
@@ -44,7 +44,7 @@ For a shared live window, coordinate an exclusive QA slot and use the host's QA 
 
 ## The working surface
 
-The terminal occupies the main region. A 248px resizable sidebar carries sectors and Programs; a 54px title bar contains navigation and a native layout picker. Routes sit immediately above the framed panes. Collapse the sidebar with **≡**.
+The terminal occupies the main region. A 248px resizable sidebar carries sectors and Programs; a 68px title bar contains navigation and a native layout picker. Routes sit immediately above the framed panes. Collapse the sidebar with **≡**. Layered native light paths run beneath the title bar and above the footer, branch along the sidebar and join the pane headers. Selected controls carry bright circuit edges; menus and rooms use the same luminous traces. A perspective Grid sits behind the 3D disc. These shapes are original decorative artwork, never fabricated telemetry.
 
 | The Grid | Herdr | Controls |
 | --- | --- | --- |

@@ -15,3 +15,5 @@ This is a portable guide for maintaining TRON. The installed host's current AGEN
 11. Document implementation, research, controls, limitations and distinct validation evidence. Use rich original previews, clearly labeled as illustrations. Publish only reviewed source/public artifacts, with signed commits and the appropriate repository topic when requested.
 
 Use pnpm and mise tasks. Use daft for repository/worktree lifecycle; keep daft.yml tracked for the owner's repository. No package-install entry hook is needed while the project has no package dependencies.
+
+TRON-specific design refinement (2026-11-07): carry unmistakable luminous circuitry through the chrome, rather than reducing its identity to cyan text and flat borders. Use branching paths, junctions, disc rings and Grid geometry around the working surface; keep text legible and distinguish decoration from status.
