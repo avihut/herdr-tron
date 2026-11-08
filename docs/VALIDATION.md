@@ -68,7 +68,17 @@ Outstanding: actual narrower windows, uneven pane widths, scale values beyond 1�
 
 ## Optional pane-rename integration — 2026-11-08
 
-Integrated the shared pane-rename helper offered by its owner and reviewed it before applying. TRON reads the shared custom name for each pane header. Its pane menu adds **Rename pane…** only when the installed `pane-rename` manifest declares `pane_rename_api: 1`. The row sits just above **Close pane…** because the availability check resolves after the menu's first render. TRON never installs pane-rename itself.
+Integrated the shared pane-rename helper offered by its owner and reviewed it before applying. TRON reads the shared custom name for each pane header. Its pane menu adds **Rename pane…** only when the installed `pane-rename` manifest declares `pane_rename_api: 1`. The row is the last one because the availability check resolves after the menu's first render. A late row anywhere else would push already-drawn rows, including the unconfirmed **Close pane…**, under the pointer. TRON never installs pane-rename itself.
 
 - 19 pure tests and 181 isolated native descriptions pass, adding the pane menu with rename available in both appearances, empty and populated. The fixtures skip the asynchronous manifest read; the menu without rename remains covered.
 - **Not yet observed live:** the menu row, the dialog opening for a nonfocused clicked pane, or a renamed header. No click tool is available to this owner session; these remain unverified until someone checks them through the UI.
+
+## Installed pane-rename revision and UI-scale pass — 2026-11-08
+
+One exclusive slot under the shared lock, with a fresh baseline and a single switch into TRON and back.
+
+- Installed the pane-rename revision through the guarded whole-folder update, with a backup. App errors stayed empty.
+- **UI zoom as a logical-width proxy (not a window resize):** on the 3840×2130 window, zoom 1.5, 2 and 3 gave logical widths of 2560, 1920 and 1280 (console headers roughly 900, 450 and 240px wide). Consoles, tab bus, disc dock, SECTORS rows, footer and scrolled lists kept their proportions with no overflow. **Finding:** at about 240px console width, the status word and buttons crowd the Program title to an ellipsis. macOS denied scripted window resizing, and the user declined an Accessibility grant, so real narrow OS windows remain unverified. The tab is an even 4×2 grid, so uneven splits were not available and were not manufactured.
+- Light appearance at zoom 1: pale technical headers around dark, readable terminals.
+- **CPU (one noisy comparison, not an on/off A/B):** Herdr sampled 24–38% under the previous layout and 28–56% under TRON with energy flowing, at 2-second intervals, with agents actively redrawing. Energy still could not be toggled without a click tool.
+- Restore check: layout, zoom, byte-identical settings, window frame, the tab's split tree and weights (read from the core layout document), each terminal's cols×rows and TRON shared keys all matched the baseline. Focus was left on the pane the user clicked into during the slot.
