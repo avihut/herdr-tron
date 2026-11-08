@@ -29,7 +29,7 @@ Tested the installed package through CUA in an exclusive shared-window slot, wit
 
 ## Validation limits
 
-Stages 02/03 of each game were solved in pure tests and have native board fixtures; only stage 01 of each was completed through live UI. Physical offline, charging, discharging and absent-battery states were not induced; parser fixtures cover them. Linux/Windows were not physically tested. The large live display was tested with bounded/scrolled dialogs; a genuinely small OS window and extreme list lengths remain unverified. Pane split/close and new-agent launch commands were not exercised against the user's active work. No optional pane-rename integration is included.
+Stages 02/03 of each game were solved in pure tests and have native board fixtures; only stage 01 of each was completed through live UI. Physical offline, charging, discharging and absent-battery states were not induced; parser fixtures cover them. Linux/Windows were not physically tested. The large live display was tested with bounded/scrolled dialogs; a genuinely small OS window and extreme list lengths remain unverified. Pane split/close and new-agent launch commands were not exercised against the user's active work. The optional pane-rename integration (see below) postdates this live pass.
 
 ## Evidence handling
 
@@ -65,3 +65,10 @@ Supersedes the normalized neon strips and measured header humps above. Source no
 - Final assertions matched the fresh baseline: Windows XP, original space/tab/focused pane, zoom 1, terminal 16px / UI 13px, absent appearance override, windowed [0,30,3840,2130], errors empty and overlays empty. Energy was flowing and the tested parent was expanded again. Released the lock and notified the coordinator/next owner. No app or core restart occurred.
 
 Outstanding: actual narrower windows, uneven pane widths, scale values beyond 1×/1.1×, hidden lifecycle and CPU/frame behavior. Full custom paths across arbitrary pane gutters and delivery-event-driven effects remain blocked by missing host capabilities; this implementation does not claim them.
+
+## Optional pane-rename integration — 2026-11-08
+
+Integrated the shared pane-rename helper offered by its owner and reviewed it before applying. TRON reads the shared custom name for each pane header. Its pane menu adds **Rename pane…** only when the installed `pane-rename` manifest declares `pane_rename_api: 1`. The row sits just above **Close pane…** because the availability check resolves after the menu's first render. TRON never installs pane-rename itself.
+
+- 19 pure tests and 181 isolated native descriptions pass, adding the pane menu with rename available in both appearances, empty and populated. The fixtures skip the asynchronous manifest read; the menu without rename remains covered.
+- **Not yet observed live:** the menu row, the dialog opening for a nonfocused clicked pane, or a renamed header. No click tool is available to this owner session; these remain unverified until someone checks them through the UI.
