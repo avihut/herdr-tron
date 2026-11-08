@@ -155,6 +155,16 @@
                   "content": {
                     "mod": "changes"
                   }
+                },
+                {
+                  "id": "herdr-sim",
+                  "type": "block",
+                  "content": {
+                    "mod": "herdr-sim",
+                    "props": {
+                      "frames": "panel"
+                    }
+                  }
                 }
               ]
             }

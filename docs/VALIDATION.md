@@ -95,3 +95,8 @@ The user rejected the there-and-back highlight and asked for energy that flows o
 ## Files and Changes panels — 2026-11-08
 
 Added at the user's request, following Herdr main's structure: a hidden right-hand `panel` column with a TRON header and a stack holding Herdr's shipped `files` and `changes` mods. Pure tests cover show, switch, hide, unknown names and layouts without a panel. Native renders cover the panel header for each panel and the top bar with Changes showing (233 total).
+
+## Simulator panel — 2026-11-08
+
+Added at the user's request (every layout gets native support for opening Herdr Sim's simulator). The panel stack gains a third child, `{id: 'herdr-sim', content: {mod: 'herdr-sim', props: {frames: 'panel'}}}`, opened by **Simulator** in the top bar (wider than 700 px; **Sim** below 1000 px), the panel header and the Grid command's PANELS section. The controls show only when `mods/herdr-sim/mod.json` exists: one `readTextFile` per copy, cached in `tron.v1.sim` so the answer re-renders every copy. Pure tests cover showing, switching to and hiding the simulator. Native renders add the header and top bar with the simulator showing, a 760 px top bar and the Grid command with the simulator present (249 total). One run was interrupted at a system load average above 900; the re-run passed. The live look is pending a slot.
+

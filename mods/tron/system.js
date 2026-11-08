@@ -21,11 +21,13 @@ export const statusText={working:'WORKING',blocked:'NEEDS INPUT',done:'FINISHED 
 // Herdr's Files and Changes mods live in the layout's hidden "panel" column, in the
 // "panel-body" stack. Pure helpers over layout() so the toggle rules are testable.
 export function findNode(node,id){if(!node||typeof node!=='object')return null;if(node.id===id)return node;for(const c of node.children??[]){const r=findNode(c,id);if(r)return r;}return null;}
-/** Which panel shows: "files", "changes", or null (hidden, or a layout without one). */
+/** Panels the layout's hidden "panel" column can show, in its stack's order. */
+export const PANELS=['files','changes','herdr-sim'];
+/** Which panel shows: "files", "changes", "herdr-sim", or null (hidden, or a layout without one). */
 export function panelShown(root){const p=findNode(root,'panel');if(!p||p.hidden)return null;return findNode(root,'panel-body')?.active??null;}
 /** Commands that show `which`, or hide the panel when `which` is already showing. */
 export function panelCommands(root,which){
- if(!findNode(root,'panel')||!['files','changes'].includes(which))return [];
+ if(!findNode(root,'panel')||!PANELS.includes(which))return [];
  if(panelShown(root)===which)return [['layout.hide',{id:'panel'}]];
  return [['layout.select',{stack:'panel-body',child:which}],['layout.show',{id:'panel'}]];
 }

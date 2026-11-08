@@ -1,1 +1,1 @@
-export { agents, spaces, panes, machines, focused, layouts, settings, theme, props, shared, setShared, run, openOverlay, closeOverlay, setAgentOrder, exec, layout, window as hostWindow } from 'herdr';
+export { agents, spaces, panes, machines, focused, layouts, settings, theme, props, shared, setShared, run, openOverlay, closeOverlay, setAgentOrder, exec, layout, readTextFile, appHome, window as hostWindow } from 'herdr';

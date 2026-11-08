@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {parseNetwork,parseBattery,layoutChoices,panelShown,panelCommands} from '../mods/tron/system.js';
+import {parseNetwork,parseBattery,layoutChoices,panelShown,panelCommands,PANELS} from '../mods/tron/system.js';
 import {projectDisc,discMesh} from '../mods/tron/geometry.js';
 const r=stdout=>({code:0,stdout});
 test('network reports interface availability with unknown failures',()=>{assert.deepEqual(parseNetwork(r('Network interfaces: en0 utun4\n')),{state:'available',interfaces:['en0','utun4']});assert.equal(parseNetwork(r('No network information')) .state,'offline');assert.equal(parseNetwork(r('Network interfaces: \n')).state,'offline');assert.equal(parseNetwork({code:1,stdout:'Network interfaces: en0'}).state,'unknown');assert.equal(parseNetwork(r('unexpected')).state,'unknown');});
@@ -18,4 +18,12 @@ test('Files/Changes panel toggles: show, switch, hide, and no-op without a panel
   assert.deepEqual(panelCommands({ id: 'root', children: [] }, 'files'), []);
   assert.deepEqual(panelCommands(tree(true, 'files'), 'terminal'), []);
   assert.equal(panelShown(null), null);
+});
+
+test('the simulator is a third panel in the same stack', () => {
+  const tree = (hidden, active) => ({ id: 'root', children: [{ id: 'panel', hidden, children: [{ id: 'panel-body', type: 'stack', active, children: PANELS.map(id => ({ id })) }] }] });
+  assert.deepEqual(PANELS, ['files', 'changes', 'herdr-sim']);
+  assert.equal(panelShown(tree(false, 'herdr-sim')), 'herdr-sim');
+  assert.deepEqual(panelCommands(tree(false, 'files'), 'herdr-sim'), [['layout.select', { stack: 'panel-body', child: 'herdr-sim' }], ['layout.show', { id: 'panel' }]]);
+  assert.deepEqual(panelCommands(tree(false, 'herdr-sim'), 'herdr-sim'), [['layout.hide', { id: 'panel' }]]);
 });
