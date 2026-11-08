@@ -48,7 +48,7 @@ The terminal occupies the main region. A 248px resizable sidebar carries a promi
 
 A 52px route strip carries the shared visual power bus. Each pane has a 68px measured console housing, clipped glass edges and white-cored light seams. Sixteen-pixel gaps give the consoles breathing room. Borders keep the same width when focus changes, avoiding terminal reflow. Geometry uses logical pixels: resizing changes straight spans, never the proportions of corners.
 
-**Energy flows and breathes.** Native loops send a highlight back and forth along each header rail and the tab bus while the surrounding light slowly swells. This is ambient atmosphere, not message-delivery telemetry. `Energy still` stops the motion. The [animated SVG illustration](previews/energy.svg) demonstrates the intended pattern using example content; it is not a native recording.
+**Energy flows and breathes.** Light travels **one way**, left to right, along each console's seams and the tab bus, then re-enters from the left after a short pause, while the surrounding light slowly swells. It follows every bend of the path: up out of the pane edge, along the rail, over the shoulder and up the right riser. It never leaves the line. Consoles are staggered by their order in the tab, so pulses ripple from pane to pane. This is ambient atmosphere, not message-delivery telemetry. `Energy still` stops the motion. The [animated SVG illustration](previews/energy.svg) demonstrates the intended pattern using example content; it is not a native recording.
 
 The current host lets mods draw in pane headers but offers no measured gutter-decoration surface. This version therefore does **not** draw continuous custom paths between arbitrary panes or synchronize them to actual relay events. A host extension is required for that part of the requested design. See the [exact capability boundary](docs/DESIGN.md#exact-host-limitation).
 
@@ -75,7 +75,7 @@ Program names and addresses stay visible. **WORKING**, **NEEDS INPUT**, **FINISH
 
 **Portal map** lists actual systems, connection readiness and their sectors. It is a navigable system directory, not a fictional network topology or Internet monitor.
 
-## Two games, six stages
+## Two games, six stages, and something hidden
 
 ### Light-cycle route
 
@@ -101,13 +101,17 @@ An original mirror-routing puzzle.
 
 The boards are deterministic. The solver tests enumerate every mirror arrangement and confirm reachable victories. Wins and losses reject additional actions until restart or stage selection.
 
+### A third game, if you can find it
+
+End of Line hints that Flynn's old cabinet is still around somewhere. Once you find it, a **real-time** light-cycle duel against an orange computer Program joins the lounge. Rules and unlock details are in the spoilers below.
+
 ## Appearance, motion and sound
 
 ![TRON light workspace illustration](previews/light.svg)
 
 Light mode uses pale technical panels, dark ink and deep teal highlights. **Both appearances keep dark terminal backgrounds and the same readable ANSI palette** because already-running terminal programs may retain dark formatting. Menus and games use the chrome palette. System appearance follows Herdr's settings.
 
-The status bar's **Energy flowing / Energy still** control toggles all ambient native motion; Grid command exposes the same reduced-motion preference. Light seams breathe over 4.8 seconds, and bounded highlights travel there and back over 5–14 seconds according to rail length. There are no continuous JavaScript redraw timers. All 3D transforms are user controlled. This version plays **no audio** and bundles no soundtrack. Palette/circuit preferences and scores are stored under `tron.v1.*` in Herdr shared state.
+The status bar's **Energy flowing / Energy still** control toggles all ambient native motion; Grid command exposes the same reduced-motion preference. Light seams breathe over 4.8 seconds. There are no continuous JavaScript redraw timers. The one deliberate exception is the hidden duel's game clock, which runs only during a live round (see spoilers). All 3D transforms are user controlled. This version plays **no audio** and bundles no soundtrack. Palette/circuit preferences and scores are stored under `tron.v1.*` in Herdr shared state.
 
 <details>
 <summary>Archive access: discoveries and spoilers</summary>
@@ -117,7 +121,13 @@ The status bar's **Energy flowing / Energy still** control toggles all ambient n
 - Select **1982** inside the archive to discover violet classic-grid circuitry. Grid command also exposes palette selection openly for accessibility.
 - **End of line.** and **Recognizer scan** reveal a read-only count of real Programs and sectors. No process is scanned or altered.
 - Win either light-cycle circuit and either disc arena to earn both badges. Then open **An unexpected pattern** for the ISO-inspired discovery.
-- Grid command → **Reset discoveries & bests** opens a confirmation screen. It clears only TRON scores/discoveries and classic palette; it does not touch workspaces or other layouts.
+- **Grid duel.** Complete **Circuit 03** of the light-cycle route, or open the archive (via **1982**) and press **flynn**. **03 / Grid duel** then appears in End of Line.
+  - Your cyan cycle never stops. Steer with the arrow keys or WASD. Walls, the arena edge and every trail, yours included, derez you.
+  - Outlast the orange Program to win. Entering the same cell on the same tick, or both crashing together, is a draw.
+  - Three opponents: **Sentry** (140 ms ticks, wanders), **Enforcer** (120 ms, avoids contested cells) and **Recognizer** (100 ms, plays the most open space).
+  - Space starts, pauses and resumes; P pauses. Wins, losses, draws and your best streak are saved locally.
+  - The game clock is one native timer callback per tick. It runs only during a live round. It pauses when the arena loses focus, the window goes inactive or another layout shows, and it stops when the round ends or the dialog closes.
+- Grid command → **Reset discoveries & bests** opens a confirmation screen. It clears only TRON scores, the duel record, discoveries and the classic palette; it does not touch workspaces or other layouts.
 
 These are original Herdr adaptations. They do not reproduce movie software or official game mechanics.
 </details>

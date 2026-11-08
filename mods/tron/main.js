@@ -44,8 +44,10 @@ function energyLayer(id,width,height,unlit,lit,opts={}){
    .child(div().relative().flex_1().h_full().overflow_hidden()
     .child(div().absolute().top(0).right(f.pad).w(w).h(height).child(unlit()))));
 }
+// A solid plate: the lit copy and both covers must match pixel for pixel outside the seams.
+// A gradient here is mapped to each clipped copy separately and leaves visible box edges.
 function skinArt(g,c,color,lit){return div().absolute().inset_0().bg(c.bg)
- .when(g.plate.length,e=>e.child(window.paint_path(PathBuilder.fill().add_polygon(g.plate,true).build(),Background.linear_gradient(90,c.glass,c.panel)).absolute().inset_0()))
+ .when(g.plate.length,e=>e.child(window.paint_path(PathBuilder.fill().add_polygon(g.plate,true).build(),c.glass).absolute().inset_0()))
  .child(paths(g.outline,1,c.edge)).child(paths(g.contacts,1,color+'80'))
  .child(paths(g.seams,1.5,color+'be')).child(paths(g.cores,2,c.core))
  .when(lit,e=>e.child(paths(g.seams,7,color+'55')).child(paths(g.seams,2.5,c.core)));}

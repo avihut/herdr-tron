@@ -48,6 +48,8 @@ Plan the layout tree before implementing it: title bar, workspace navigation, ag
 
 The terminal remains the main work surface. Keep dense ornamental detail in the surrounding controls. Make empty, busy, blocked, offline and long-name states deliberate. Check a narrow window as well as a large monitor. Avoid large fixed-height popups and unreachable controls at the screen edge.
 
+Menu rows must not move under the pointer. A row gated on an asynchronous check (for example, whether an optional mod is installed) can arrive after the menu has drawn. Append such a row last, or resolve the check before `openOverlay` and pass the result in props; never insert it above existing rows. `pane.close` takes no confirmation, so a shifted row can turn a click aimed at a harmless entry into closing the pane and ending its terminal.
+
 Bound room and game dialogs by both a content-appropriate pixel maximum and a fraction of the viewport. A fraction alone can produce vast empty panels on ultrawide screens. For example, TRON uses `min(940px, 90% of viewport width)` and `min(760px, 88% of viewport height)`; choose limits for the actual content, keep overflow scrollable and verify small-window reachability separately. These are dialog examples, not universal dimensions. Pointer menus still size to their rows without a forced height.
 
 Keep prose constrained to the dialog width. In Expanse live QA, horizontal scrolling on the entire native dialog body prevented paragraphs from wrapping. Its verified fix gives the prose body `.w_full().min_w(0)` within a constrained parent and isolates horizontal scrolling to bounded-height rows containing fixed geometry, such as a game board or 3D view. Keep explanatory text and controls outside those rows where possible, with vertical scrolling for longer content. This fixes the observed dialog structure; it is not a blanket ban on horizontal scrolling. Inspect actual wrapping in both appearances and test small-window reachability separately.
@@ -55,6 +57,22 @@ Keep prose constrained to the dialog width. In Expanse live QA, horizontal scrol
 Follow the native layout-switcher rules in [CLAUDE.md](CLAUDE.md). Every layout must have a switcher inside its own bar or menu, matching the host font, shape and palette. Normally invoke `run("mod.open", { name: "layout-picker" })`; alternatively draw a native menu in the layout's own mod. Pointer menus size to their rows without a forced height.
 
 Every switcher lists `layouts()` once, hides a built-in when its personal replacement exists, uses the shared title conventions, marks `shared("layout")`, and switches through `layout.switch`. In particular, show Windows 98 rather than Win98 Dark. Keep these rules aligned with `mods/layout-picker/main.js`. Do not wrap a root or float a detached switcher over the layout. Update the switcher table in CLAUDE.md after installation.
+
+## Make scenes and lists directly manipulable
+
+These are general preferences the user stated during the StarCraft II work; they apply to every layout.
+
+**Tabs are draggable to reorder.** Reorder with `tab.move {id, index}`; the host documents the index as a 1-based position in the space. Verified live 2026-11-08: the index counts settled tabs, matching `TabInfo.index`, unlike `tab.select`'s index, next and prev, which skip them. In a space ordered P1, P2 (settled), P3, P4, moving P1 to index 3 showed P3, P1, P4. Compute drop positions from the full tab order. A press becomes a drag only after a few pixels. Draw a landing marker beside the target, cancel when the pointer leaves the strip, and never let the release that ends a drag also act as a click. Build it from `on_mouse_down`, `on_mouse_move` (delivered only while the element is hovered), `on_mouse_up` and `on_hover`; `on_drop` receives only external files. Keep the landing-position arithmetic in a pure, tested function. Take the drop target from `on_mouse_up` on the button under the pointer: in the XP trace the release reached the button under the pointer although the press began on another, as the shipped `tabs` mod relies on. Don't depend on move events crossing other buttons. The first XP taskbar build passed its unit tests, yet a real drag did nothing (see the next paragraph), so unit cases are not acceptance; test a real drag in the app.
+
+**One handler per mouse button per element.** `gpui-kit.d.ts` only promises that handlers for *different* buttons on one element are independent. A second `on_mouse_down("left", …)` on the same element replaces the first. In XP, a helper that added `on_mouse_down("left", stopPropagation)` to keep presses out of a `window_drag` area was applied after each button's own press handler and silently disabled tab dragging, menu-bar menus, Minesweeper's double-click chord and a grouped taskbar list. Stop propagation inside the element's single handler instead, and check any wrapper helper for the same clobbering.
+
+**Objects in an illustrated scene are selectable themselves.** A label floating over a picture is not enough. Put a hit region over each object, normalized to the artwork and scaled with the same cover transform as the backdrop, with a hover highlight. A themed room is a working surface, not an alternate view: give its objects live readouts and actions that name their targets explicitly (an attention request that focuses its agent, a space to select, a settled tab to restore, a setting to toggle). Inner controls stop propagation so they don't also trigger the object.
+
+**Rotatable 3D views orbit under the cursor.** Dragging rotates the model: yaw from horizontal movement, pitch from vertical, clamped. Releasing or leaving stops it. Keep buttons for keyboard users.
+
+**Describe animated portraits exactly.** The host animates properties, not image sequences. A few pre-rendered frames cross-faded with native opacity loops, with tempo from real status and a still frame under reduced motion, is a pre-rendered frame crossfade; never call it a real-time animated model.
+
+**Sound.** Ship only original or properly licensed audio; the person may point the layout at their own local files. `playSound` plays a one-shot clip with no stop, loop or volume control, so continuous background music per space needs a host extension. Check which audio formats the host actually plays before relying on one.
 
 ## Make light and dark usable
 
@@ -115,7 +133,7 @@ Coordinate file ownership when other agents are active. Give each layout its own
 
 ### Shared window lock
 
-Before live installation, reload, layout switching, appearance changes or UI QA, acquire the shared `/private/tmp/herdr-app-qa.lock` through `python3 ~/.config/herdr-app/tools/qa-lock.py acquire --address YOUR_HERDR_ADDRESS --thread YOUR_THREAD_ID --purpose 'specific live work'`. Use `status` first. The helper serializes acquisition; a failed acquisition prints the existing owner and contact instructions. The lock records the holder's Herdr address, thread locator, contact command, purpose, UTC acquisition/heartbeat times and hang-recovery instructions. This is a cooperative protocol, not an app-enforced permission boundary.
+Before live installation, reload, layout switching, appearance changes or UI QA, acquire the shared `/private/tmp/herdr-app-qa.lock` through `python3 ~/.config/herdr-app/tools/qa-lock.py acquire --address YOUR_HERDR_ADDRESS --thread YOUR_THREAD_ID --purpose 'specific live work'`. Use `status` first. The helper serializes acquisition; a failed acquisition prints the existing owner and contact instructions. The lock records the holder's Herdr address, thread locator, contact command, purpose, UTC acquisition/heartbeat times and hang-recovery instructions. The coordinator's current address is read from the one-line file `~/.config/herdr-app/tools/qa-coordinator`; a successor coordinator updates that file when addresses change. This is a cooperative protocol, not an app-enforced permission boundary.
 
 Retain the returned token. While actively using the window, run `heartbeat --address YOUR_HERDR_ADDRESS --token TOKEN` at milestones and at least every five minutes. After restoring prior layout/appearance and reporting errors, run `release --address YOUR_HERDR_ADDRESS --token TOKEN`. Source-only work and standalone checks that do not affect the live window do not need this lock. Never manually overwrite/delete it or remove its `.guard` file.
 
@@ -188,8 +206,11 @@ Add a brief date and explanation below for meaningful refinements. Do not keep c
 | 2026-11-07 | Refined TRON after rejection of stretched circuit strips: integrate proportion-preserving measured geometry among pane boundaries/gutters, adapt routing to window size and UI scale, and avoid repeated blob-like badges. Live resize/scale acceptance remains required. |
 | 2026-11-07 | Checked the current pane-decoration API limits: header mods can measure their own blocks, but no documented gutter/background mod hook or pane-bound geometry is exposed. Record that limit rather than claiming continuous gutter rendering. |
 | 2026-11-07 | Added the user's TRON breathing/flowing-energy direction, with extra pane chrome allowed, bounded native motion, reduced motion and honest separation of ambient packets from real relay events. Documented the missing cross-gutter host capability as a proposal. |
-
 | 2026-11-08 | Verified SCII retained-child exit/re-entry invalidation: notify the child with its current event context before detaching; cover cached display state as well as paused simulation state. |
+| 2026-11-08 | Added the user's general direct-manipulation preferences from the SCII work: drag-to-reorder tabs, selectable scene objects with explicitly targeted live actions, cursor-orbit 3D views, exact naming of pre-rendered frame crossfades, and licensed one-shot audio limits. Recorded that tab-drag unit tests did not catch a real XP drag failure. |
+| 2026-11-08 | Traced XP's failed tab drag: a second same-button `on_mouse_down` on one element replaces the first, so a stop-propagation wrapper disabled the press logic. One handler per button per element; take drops from `on_mouse_up` under the pointer. |
+| 2026-11-08 | Verified live that `tab.move`'s index counts settled tabs (unlike `tab.select`), so tab-drag drop positions use the full tab order. |
+| 2026-11-08 | Menu rows gated on an asynchronous check go last or are resolved before the menu opens; a late row inserted above others shifted Close (no confirmation) under the pointer in three layouts. |
 
 ## Workspace grouping in every layout
 

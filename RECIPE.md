@@ -12,7 +12,7 @@ The dark palette uses near-black #04090d, glass #0a151c, cyan #65ddf5 and white-
 
 ## How it behaves
 
-Program labels show Herdr working, blocked, done and idle states. Native opacity loops provide a 4.8-second breathing glow. One bounded light highlight moves there and back on each pane rail and the tab bus over 5–14 seconds; this is ambient decoration, never a claimed message-delivery event. Reduced motion removes all loops, keeping static light seams and status. Clicking a Program focuses its actual address. Right-click actions retain the row/tab/pane clicked. Creation uses Herdr commands and the built-in new-menu. Herdr retains normal confirmation behavior for closing structural objects.
+Program labels show Herdr working, blocked, done and idle states. Native opacity loops provide a 4.8-second breathing glow. A light window travels one way (left to right) along each console's seams and the tab bus, about 170 px/s on consoles and 340 px/s on the bus. It holds off-screen for 1.6 s, then re-enters, staggered by pane order in the tab. This is ambient decoration, never a claimed message-delivery event. Reduced motion removes all loops, keeping static light seams and status. Clicking a Program focuses its actual address. Right-click actions retain the row/tab/pane clicked. Creation uses Herdr commands and the built-in new-menu. Herdr retains normal confirmation behavior for closing structural objects.
 
 The pointer picker is content-sized, follows replacement/title/deduplication rules, marks the actual selected layout, and switches through layout.switch. It does not wrap the layout root.
 
@@ -24,6 +24,7 @@ Four dialog destinations provide an attention queue/preferences, local game loun
 - `mods/tron/main.js`: native View roles top/side/tabs/pane/footer/picker/menu/room/cycle/disc.
 - `host.js`: centralized imports from Herdr. No fixture host is installed.
 - `games.js`: pure cycle movement, mirror tracing and score reducers.
+- `duel.js`: the hidden real-time light-cycle duel: seeded opponent, simultaneous ticks, draws and the local record. The view owns its clock: one `cx.timer.after` per tick, only during a live round, pausing when the arena loses focus, the window is inactive or another layout shows.
 - `design.js`: measured console geometry, appearance palettes, disc cradle and bounded native motion parameters. `circuitry.js`: square perspective Grid for the archive.
 - `geometry.js`: original XYZ disc mesh, transforms, Lambert lighting and projection.
 - `workspace-tree.js` / `workspace-tree-model.js`: native parent/child workspace navigation and machine-scoped shared hierarchy, preserved from the coordinated integration.
@@ -42,7 +43,7 @@ The native checker does not lay out, paint, or click the interface. A fixture pa
 
 Use the host's exclusive QA lock before live mutation. Stage outside watched mods and publish whole folders, never source files individually. Preserve unrelated settings and restore the previous layout/appearance after testing. Stop immediately if host OOM or repeated Null errors appear.
 
-Keep game grids bounded (9×7 and 7×7). Narrow dialogs scroll vertically; their boards need roughly 400px of usable width. Non-macOS probes remain unknown. Network-interface availability is not Internet connectivity. No battery state is invented when parsing fails. Physical-state claims must come from observation, not fixtures.
+Native loops only swing there and back (`LoopPolicy.period` is "there and back"), and every loop starts in phase, so no combination of loops can move strictly forward. One-way energy uses `.frames()` instead. Every frames list shares one clock, and a frames text change re-lays out its parent each tick (observed live). The rail art is drawn twice: a lit copy underneath, and an unlit copy split into left and right covers anchored to the edges. The left cover's width is a frames list of transparent JetBrains Mono digits, so the gap between the covers slides forward. All copies must be pixel-identical outside the seams. A `linear_gradient` fill is mapped to each clipped copy separately and showed box edges live, so the plate is a solid fill. Keep game grids bounded (9×7, 7×7 and the 36×22 duel). Narrow dialogs scroll vertically; their boards need roughly 400px of usable width. Non-macOS probes remain unknown. Network-interface availability is not Internet connectivity. No battery state is invented when parsing fails. Physical-state claims must come from observation, not fixtures.
 
 ## Done when
 
