@@ -59,6 +59,7 @@ The current host lets mods draw in pane headers but offers no measured gutter-de
 | Program | Reporting agent | Disc/name click focuses the actual address; right-click to focus or peek |
 | Identity disc | Program selector | Disc archive binds an actual Program; **Focus this Program** navigates to it |
 | Console | Pane | Split, zoom, focus and close through explicit pane targets; **Rename pane…** appears in the pane menu only when the optional [pane-rename](https://github.com/avihut/herdr-pane-rename) mod is installed |
+| Files / Changes | Herdr panels | **Files** and **Changes** in the top bar (or Grid command) dock Herdr's own file browser and diff view on the right for the focused pane's folder; the panel header switches or closes |
 | System / portal | Machine | Ready/loading/unavailable states come from Herdr; create sectors only on ready systems |
 
 Program names and addresses stay visible. **WORKING**, **NEEDS INPUT**, **FINISHED UNSEEN**, and **IDLE** are Herdr's actual states. Finished unseen becomes idle when viewed. Disc colors are cosmetic; they never change prompts, models or permissions. No health, energy, completion percentage or machine-load gauge is invented.

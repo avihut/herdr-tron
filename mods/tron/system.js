@@ -17,3 +17,15 @@ export const REPLACED={main:'my-herdr',terminals:'my-terminals',win98:'win98-dar
 const TITLES={main:'Herdr',terminals:'Terminals',win98:'Windows 98',winxp:'Windows XP','herdr-t3':'Herdr T3','main-folders':'Space Folders','herdr-sim':'Herdr Sim',cockpit:'Cockpit',traveler:'Traveler',tron:'TRON'};
 export function layoutChoices(all,current){return [...new Set(all)].filter(n=>!(REPLACED[n]&&all.includes(REPLACED[n]))).map(name=>{const b=Object.keys(REPLACED).find(k=>REPLACED[k]===name),base=name.replace(/^my-/,'');return {name,current:name===current,title:TITLES[b]??TITLES[name]??TITLES[base]??base.split(/[-_ ]+/).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ')};});}
 export const statusText={working:'WORKING',blocked:'NEEDS INPUT',done:'FINISHED UNSEEN',idle:'IDLE'};
+
+// Herdr's Files and Changes mods live in the layout's hidden "panel" column, in the
+// "panel-body" stack. Pure helpers over layout() so the toggle rules are testable.
+export function findNode(node,id){if(!node||typeof node!=='object')return null;if(node.id===id)return node;for(const c of node.children??[]){const r=findNode(c,id);if(r)return r;}return null;}
+/** Which panel shows: "files", "changes", or null (hidden, or a layout without one). */
+export function panelShown(root){const p=findNode(root,'panel');if(!p||p.hidden)return null;return findNode(root,'panel-body')?.active??null;}
+/** Commands that show `which`, or hide the panel when `which` is already showing. */
+export function panelCommands(root,which){
+ if(!findNode(root,'panel')||!['files','changes'].includes(which))return [];
+ if(panelShown(root)===which)return [['layout.hide',{id:'panel'}]];
+ return [['layout.select',{stack:'panel-body',child:which}],['layout.show',{id:'panel'}]];
+}

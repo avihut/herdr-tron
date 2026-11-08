@@ -108,6 +108,57 @@
               }
             }
           ]
+        },
+        {
+          "id": "panel",
+          "type": "column",
+          "hidden": true,
+          "size": {
+            "px": 380
+          },
+          "min": 260,
+          "max": 720,
+          "background": "chrome",
+          "border": {
+            "width": 1,
+            "color": "input"
+          },
+          "children": [
+            {
+              "id": "panel-head",
+              "type": "block",
+              "content": {
+                "mod": "tron",
+                "props": {
+                  "role": "panelbar"
+                }
+              },
+              "size": {
+                "px": 34
+              }
+            },
+            {
+              "id": "panel-body",
+              "type": "stack",
+              "active": "files",
+              "children": [
+                {
+                  "id": "files",
+                  "type": "block",
+                  "content": {
+                    "mod": "files"
+                  }
+                },
+                {
+                  "id": "changes",
+                  "type": "block",
+                  "content": {
+                    "mod": "changes"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     },

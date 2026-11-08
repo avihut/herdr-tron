@@ -6,7 +6,7 @@ A native Herdr layout framed by luminous Legacy-inspired circuitry: a readable w
 
 ## What you see
 
-A 50px title bar reserves 72px for macOS window buttons and carries TRON's native picker, Command, Destinations, sidebar toggle and Settings. A 248px resizable sidebar has a projected identity-disc dock bound to the focused Program, native selectable parent/child SECTORS rows and a scrollable Program list. Parent selection and disclosure are separate actions; no footer hierarchy selector is used. The dock shrinks on short sidebars and hides below 440px available height. A 52px route strip includes a 14px light bus. Pane headers are 68px measured console housings with clipped glass edges, luminous rails, status/address and split/zoom/context controls. Native gaps are 16px; focused and unfocused borders are both 2px, with focus changing color only. A 36px footer includes real counts, local samples, energy preference.
+A 50px title bar reserves 72px for macOS window buttons and carries TRON's native picker, Command, Destinations, **Files** and **Changes** (above 700px wide), sidebar toggle and Settings. Files and Changes open Herdr's own shipped `files` and `changes` mods in a hidden 380px right-hand column (resizable 260–720px). A 34px TRON header there switches between them or closes the column. Grid command offers the same toggles at any width. A 248px resizable sidebar has a projected identity-disc dock bound to the focused Program, native selectable parent/child SECTORS rows and a scrollable Program list. Parent selection and disclosure are separate actions; no footer hierarchy selector is used. The dock shrinks on short sidebars and hides below 440px available height. A 52px route strip includes a 14px light bus. Pane headers are 68px measured console housings with clipped glass edges, luminous rails, status/address and split/zoom/context controls. Native gaps are 16px; focused and unfocused borders are both 2px, with focus changing color only. A 36px footer includes real counts, local samples, energy preference.
 
 The dark palette uses near-black #04090d, glass #0a151c, cyan #65ddf5 and white-cored #e1fcff illumination. The light palette uses pale #dce8eb/#f3f7f7, dark ink #122c38 and teal #006a80. Both keep #0b121b terminal backgrounds and identical ANSI colors. Geist/Geist Mono are available native fonts; no official logotype is copied. Geometry, palette and motion limits are in design.js and shared with illustrated previews.
 
@@ -20,7 +20,7 @@ Four dialog destinations provide an attention queue/preferences, local game loun
 
 ## Built from
 
-- `layouts/tron.json`: root column; title, body row (sidebar and work column), footer. Work holds routes and active-tab terminal pane frames. Root owns appearance and terminal-menu selection.
+- `layouts/tron.json`: root column; title, body row (sidebar, work column and the hidden `panel` column: `panel-head` block with role `panelbar`, then the `panel-body` stack of `files` and `changes` blocks), footer. A toggle reads `layout()`: it hides the panel when the requested one already shows, otherwise runs `layout.select {stack:'panel-body', child}` then `layout.show {id:'panel'}` (`panelCommands` in `system.js`). Work holds routes and active-tab terminal pane frames. Root owns appearance and terminal-menu selection.
 - `mods/tron/main.js`: native View roles top/side/tabs/pane/footer/picker/menu/room/cycle/disc.
 - `host.js`: centralized imports from Herdr. No fixture host is installed.
 - `games.js`: pure cycle movement, mirror tracing and score reducers.
