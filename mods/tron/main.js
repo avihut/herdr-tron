@@ -8,7 +8,7 @@ import { newCycle, cycleMove, CYCLE_LEVELS, newDisc, rotateMirror, launchDisc, D
 import { parseNetwork, parseBattery, layoutChoices, statusText } from './system.js';
 import { projectDisc, faceColor } from './geometry.js';
 import { gridFloor } from './circuitry.js';
-import { gridPalette, consoleGeometry, discCradle, energyMotion } from './design.js';
+import { gridPalette, consoleGeometry, discCradle, energyFlow } from './design.js';
 import { renamedPane, paneRenameAvailable, openPaneRename } from './pane-rename.js';
 
 const NS='tron.v1.';
@@ -20,27 +20,45 @@ function txt(s,color,size=12){return div().text_size(size).text_color(color).chi
 function paths(lines,width,color){const path=PathBuilder.stroke(width);for(const points of lines){path.move_to(...points[0]);for(const point of points.slice(1))path.line_to(...point);}return window.paint_path(path.build(),color).absolute().inset_0();}
 // Native motion lives in GPUI, with a constant illuminated trace when disabled.
 function breathe(element,id){return element.id(id).when(!read('reducedMotion',false),e=>e.loop('opacity',{from:.28,to:.8,period:4800,easing:'ease-in-out'}));}
-function energyPacket(id,start,end,y,color){
- const motion=energyMotion(start,end);
- if(read('reducedMotion',false)||!motion)return div();
- const span=motion.width;
- return div().id(id).absolute().left(start).top(y-2).w(span).h(4).rounded(2)
-  .child(window.paint_path(PathBuilder.fill().add_polygon([[0,0],[span,0],[span,4],[0,4]],true).build(),Background.linear_gradient(90,color+'00',color)).absolute().inset_0())
-  .child(div().absolute().right(0).top(1).w(6).h(2).bg(palette().core))
-  .loop('left',{from:motion.from,to:motion.to,period:motion.period,easing:'ease-in-out'});
-}
-function consoleSkin(width,height,color,id){const c=palette(),g=consoleGeometry(width,height);
+// One-direction energy. A lit copy of the path lies under an unlit copy that is split into
+// two covers, anchored to the left and right edges so their art never moves. The gap between
+// them slides left to right: the left cover's width comes from native frames of invisible
+// digits (one shared clock, no JavaScript timer). Light exists only on path pixels, so the
+// travelling glow follows every bend and never leaves the path.
+const digitCache=[];const digits=n=>digitCache[n]??='0'.repeat(n);
+const flowCache=new Map();
+function flowFor(width,opts){const key=`${Math.floor(width)}|${JSON.stringify(opts)}`;let f=flowCache.get(key);
+ if(f===undefined){if(flowCache.size>96)flowCache.clear();const e=energyFlow(width,opts);f=e&&{...e,list:e.counts.map(digits)};flowCache.set(key,f);}return f;}
+function energyLayer(id,width,height,unlit,lit,opts={}){
+ const f=read('reducedMotion',false)?null:flowFor(width,opts);
+ if(!f)return div().absolute().inset_0().child(unlit());
+ const w=Math.floor(width);
  return div().absolute().inset_0().overflow_hidden()
-  .when(g.plate.length,e=>e.child(window.paint_path(PathBuilder.fill().add_polygon(g.plate,true).build(),Background.linear_gradient(90,c.glass,c.panel)).absolute().inset_0()))
-  .child(paths(g.outline,1,c.edge)).child(paths(g.contacts,1,color+'80'))
-  .child(breathe(paths(g.seams,5,color+'38'),id+'-breath'))
-  .child(paths(g.seams,1.5,color+'be')).child(paths(g.cores,2,c.core))
-  .child(energyPacket(id+'-flow',Math.min(96,Math.floor(width*.3))+24,width-22,height-6,color));
+  .child(lit())
+  .child(h_flex().absolute().top(0).left(-f.pad).w(w+2*f.pad).h(height)
+   .child(div().relative().h_full().flex_none().overflow_hidden()
+    .child(div().absolute().top(0).left(f.pad).w(w).h(height).child(unlit()))
+    .child(div().id(id+'-sizer').flex_none().text_size(f.size).font_family('JetBrains Mono').text_color('#00000000').frames(f.list,f.ms)))
+   .child(div().w(f.win).h_full().flex_none())
+   .child(div().relative().flex_1().h_full().overflow_hidden()
+    .child(div().absolute().top(0).right(f.pad).w(w).h(height).child(unlit()))));
 }
+function skinArt(g,c,color,lit){return div().absolute().inset_0().bg(c.bg)
+ .when(g.plate.length,e=>e.child(window.paint_path(PathBuilder.fill().add_polygon(g.plate,true).build(),Background.linear_gradient(90,c.glass,c.panel)).absolute().inset_0()))
+ .child(paths(g.outline,1,c.edge)).child(paths(g.contacts,1,color+'80'))
+ .child(paths(g.seams,1.5,color+'be')).child(paths(g.cores,2,c.core))
+ .when(lit,e=>e.child(paths(g.seams,7,color+'55')).child(paths(g.seams,2.5,c.core)));}
+function consoleSkin(width,height,color,id,phase=0){const c=palette(),g=consoleGeometry(width,height);
+ return div().absolute().inset_0().overflow_hidden()
+  .child(energyLayer(id+'-flow',width,height,()=>skinArt(g,c,color,false),()=>skinArt(g,c,color,true),{phase}))
+  .child(breathe(paths(g.seams,5,color+'38'),id+'-breath'));
+}
+function busArt(width,c,lit){const line=[[[0,7],[Math.max(0,width),7]]];return div().absolute().inset_0().bg(c.bg)
+ .child(paths(line,1,c.accent+'90'))
+ .when(lit,e=>e.child(paths(line,6,c.accent+'55')).child(paths(line,2,c.core)));}
 function tabBus(width){const c=palette();return div().relative().w_full().h(14).flex_none().overflow_hidden()
- .child(paths([[[0,7],[Math.max(0,width),7]]],1,c.accent+'90'))
- .child(breathe(paths([[[0,7],[Math.max(0,width),7]]],5,c.accent+'30'),'route-bus-breath'))
- .child(energyPacket('route-bus-flow',0,width,7,c.accent));}
+ .child(energyLayer('route-bus-flow',width,14,()=>busArt(width,c,false),()=>busArt(width,c,true),{speed:340,maxSteps:640,window:64}))
+ .child(breathe(paths([[[0,7],[Math.max(0,width),7]]],5,c.accent+'30'),'route-bus-breath'));}
 function corner(){const c=palette();return div().relative().w(28).h(12).flex_none().child(paths([[[0,11],[10,11],[20,1],[28,1]]],1,c.accent));}
 function btn(id,label,fn,active=false){const c=palette();return h_flex().id(id).items_center().gap(7).px(10).py(6).rounded(0).border_l(active?2:0).border_b(1).border_color(active?c.accent:c.line).cursor_pointer().accessibility_label(label).bg(active?c.raised:c.panel+'00').text_color(active?c.accent:c.text).text_size(12).hover(s=>s.bg(c.raised).border_color(c.accent)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click((e,cx)=>{cx.stop_propagation();fn(e,cx);}).child(div().min_w(0).truncate().child(label));}
 const line=()=>div().h(1).w_full().bg(palette().line);
@@ -120,11 +138,12 @@ class Tron extends View{
 
  pane(){
   const c=palette(),p=panes().find(p=>p.pane===this.p.pane);if(!p)return div();
+  const peers=panes().filter(x=>x.tab===p.tab),phase=peers.length>1?peers.findIndex(x=>x.pane===p.pane)/peers.length:0;
   const title=renamedPane(p)||p.title;
   const color=p.status==='blocked'?c.orange:p.status==='done'?c.green:c.accent;
   return v_flex().relative().size_full().bg(c.bg)
    .on_mouse_down('right',(_e,cx)=>{cx.stop_propagation();context('pane',p.pane,p.terminal);})
-   .child(consoleSkin(this.width,68,color,'console-'+p.pane))
+   .child(consoleSkin(this.width,68,color,'console-'+p.pane,phase))
    .child(h_flex().relative().h(40).w_full().flex_none().px(14).gap(10).items_center()
     .child(txt(p.terminal??'MOD',p.focused?c.core:color,13).font_family('Geist Mono').font_semibold().flex_none())
     .when(this.width>=360,e=>e.child(txt(title,c.text,11).truncate().flex_1()))

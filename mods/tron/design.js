@@ -22,10 +22,27 @@ export function consoleGeometry(width,height=54){
 
 export function arc(cx,cy,r,start,end,steps=32){return Array.from({length:steps+1},(_,i)=>{const a=start+(end-start)*i/steps;return [cx+Math.cos(a)*r,cy+Math.sin(a)*r];});}
 
-export function energyMotion(start,end){
- if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end-start<48)return null;
- const width=Math.min(28,(end-start)/3);
- return {width,from:start,to:end-width,period:Math.min(14000,Math.max(5000,(end-start)*22))};
+// Monospace advance per em for the invisible sizer digits (JetBrains Mono ships with Herdr).
+export const ADVANCE=.6;
+// One-direction energy along a path of logical width `width`. A window `win` px wide sweeps
+// left to right from fully off the left edge to fully off the right edge, one `step` per
+// native frame, then holds off-screen for `pauseMs` before re-entering on the left.
+// `counts[i]` is how many sizer digits the left cover holds on frame i; its width is
+// counts[i] * step. Native frames share one clock, so `phase` (0..1) rotates the list to
+// stagger panes deterministically. Native loops can only swing there and back, so frames
+// are the only native primitive that moves strictly forward.
+export function energyFlow(width,{speed=170,maxSteps=320,window=44,pauseMs=1600,phase=0}={}){
+ const w=Math.floor(Number(width)||0);
+ if(!(w>=48)||!Number.isFinite(w))return null;
+ const win=Math.min(window,Math.max(16,Math.floor(w/4))),pad=win;
+ // 8% overshoot absorbs font advance rounding, so the window always clears the right edge.
+ const travel=(w+pad)*1.08;
+ const step=Math.max(3,travel/maxSteps),size=step/ADVANCE;
+ const ms=Math.max(16,Math.round(step/speed*1000));
+ const steps=Math.ceil(travel/step),hold=Math.max(0,Math.round(pauseMs/ms));
+ const counts=[...Array(steps+1).keys(),...Array(hold).fill(steps)];
+ const p=Number.isFinite(phase)?((phase%1)+1)%1:0,shift=Math.floor(p*counts.length);
+ return {win,pad,step,size,ms,steps,counts:counts.slice(shift).concat(counts.slice(0,shift)),cycle:counts.length*ms};
 }
 
 export function discCradle(size=184){
